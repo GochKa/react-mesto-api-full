@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
-const cors = require('cors');
+
 // Импорт необходимых модулей
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -19,7 +19,6 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors);
 
 // Логин
 app.post('/signin', celebrate({
