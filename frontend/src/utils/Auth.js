@@ -1,4 +1,4 @@
-export const Base_Url = "https://auth.nomoreparties.co"
+export const Base_Url = "https://api.mestogram.gocha.nomoreparties.sbs"
 
 function getResponse(res){
   if(res.ok) {
