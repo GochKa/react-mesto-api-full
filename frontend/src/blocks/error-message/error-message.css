@@ -1,0 +1,5 @@
+.error-message {
+    opacity: 0;
+    position: absolute;
+    margin-bottom: 13px;
+}

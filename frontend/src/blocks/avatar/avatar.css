@@ -1,0 +1,42 @@
+
+  .avatar {
+    position: relative;
+    border-radius: 60px;
+    cursor: pointer;
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .avatar::before {
+    visibility: hidden;
+    content: '';
+    background-image: url('../../Images/Change-Photo.svg');
+    background-position: center;
+    position: absolute;
+    top: calc(50% - 13px);
+    left: calc(50% - 13px);
+    z-index: 1;
+    width: 26px;
+    height: 26px;
+  }
+  
+  .avatar::after {
+    width: 120px;
+    height: 120px;
+    visibility: hidden;
+    content: '';
+    background-color: rgba(0, 0, 0, 0.8);
+    position: absolute;
+    border-radius: 60px;
+  }
+  
+  .avatar:hover::before{
+    visibility: visible;
+  }
+  
+  .avatar:hover::after {
+    visibility: visible;
+  }
