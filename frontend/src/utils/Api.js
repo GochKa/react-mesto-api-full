@@ -6,7 +6,7 @@ class Api {
 
 
   getProfile(){
-    return fetch("https://nomoreparties.co/v1/cohort-37/users/me", {
+    return fetch("https://nomoreparties.co/users/me", {
       headers:  this._headers
     })
     .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
@@ -14,7 +14,7 @@ class Api {
   }
 
   getInitialCards(){
-    return fetch("https://mesto.nomoreparties.co/v1/cohort-37/cards", {
+    return fetch("https://api.mestogram.gocha.nomoreparties.sbs/cards", {
       headers:  this._headers
     })
     .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
@@ -67,7 +67,7 @@ class Api {
   }
 
   updateAvatar(avatar){
-    return fetch("https://mesto.nomoreparties.co/v1/cohort-37/users/me/avatar" , {
+    return fetch("https://api.mestogram.gocha.nomoreparties.sbs/users/me/avatar" , {
       method: "PATCH",
       headers:  this._headers,
       body: JSON.stringify({
@@ -81,7 +81,7 @@ class Api {
  
 
 const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-37',
+  baseUrl: 'https://api.mestogram.gocha.nomoreparties.sbs',
   headers: {
     authorization: "7d4e165e-60aa-456b-9d6e-f945ad75e103",
     "Content-Type": 'application/json'
