@@ -31,7 +31,7 @@ app.post('/signin', celebrate({
   }),
 }), login);
 
-// Регистрациия
+// Регистрация
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
