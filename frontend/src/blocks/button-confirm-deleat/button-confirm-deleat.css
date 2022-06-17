@@ -1,0 +1,31 @@
+.button-confirm-deleat{
+  width: 358px;
+  height: 50px;
+  margin-left: 36px;
+  margin-top: 48px;
+  border: 0;
+  border-radius: 2px;
+  margin-bottom: 37px;
+  background-color: #000;
+  color: #fff;
+  font-family: "Inter", Arial, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  cursor: pointer;
+}
+.button-confirm-deleat:hover{
+  opacity: 0.8;
+  transition-duration: 1s;
+}
+
+@media screen and (max-width: 540px){
+  .button-confirm-deleat{
+      width: 238px;
+      height: 46px;
+      margin-top: 45px;
+      margin-left: 22px;
+      justify-self: center;
+  }
+}
