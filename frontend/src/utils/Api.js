@@ -6,7 +6,7 @@ class Api {
 
 
   getProfile(){
-    return fetch("https://nomoreparties.co/users/me", {
+    return fetch("https://api.mestogram.gocha.nomoreparties.sbs/users/me", {
       headers:  this._headers
     })
     .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
