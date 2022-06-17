@@ -10,7 +10,7 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found');
 const regEx = require('./utils/reg');
-
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 // Пожкдючение к базе данных
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
@@ -20,6 +20,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(requestLogger);
 // CORS
 app.use(cors());
 
@@ -51,6 +52,8 @@ app.use('/', auth, require('./routes/cards'));
 
 // Переход по несуществующему пути
 app.use('*', auth, (_, __, next) => next(new NotFoundError('Запрашиваемая страница не найдена')));
+
+app.use(errorLogger);
 
 app.use(errors());
 
