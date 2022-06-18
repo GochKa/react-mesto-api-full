@@ -7,17 +7,15 @@ const BadRequestError = require('../errors/bad-request');
 const UnauthorizedError = require('../errors/unauthorized');
 const ConflictError = require('../errors/conflict');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
-
 // Логин уже зарегестрированного пользтвателя
-const SECRET_KEY_DEV = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjlhNGE4ZDZhMzNkOGRhY2FlNGY2MDEiLCJpYXQiOjE2NTQyNzg4MDcsImV4cCI6MTY1NDg4MzYwN30.WFGYI3bRth7yCA_Rk6rbn7tAI-89z52bgc69OYMXGe4';
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : SECRET_KEY_DEV, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
 
       res.send({ token });
     })
