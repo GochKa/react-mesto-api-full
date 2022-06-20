@@ -4,7 +4,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
-const cors = require('cors');
 
 // Импорт необходимых модулей
 const { login, createUser } = require('./controllers/users');
@@ -25,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 // CORS
-app.use(cors(corsConfig));
+app.use(corsConfig);
 
 // Логин
 app.post('/signin', celebrate({
