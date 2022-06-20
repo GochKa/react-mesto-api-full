@@ -12,6 +12,7 @@ const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found');
 const regEx = require('./utils/reg');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const corsConfig = require('./middlewares/corsConfig');
 // Пожкдючение к базе данных
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
@@ -21,9 +22,10 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(requestLogger);
 // CORS
-app.use(cors());
+app.use(cors(corsConfig));
 
 // Логин
 app.post('/signin', celebrate({
