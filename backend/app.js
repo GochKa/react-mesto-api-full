@@ -23,17 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-const allowedCors = {
-  credentials: true,
-  origin: [
-    'http://localhost:3000',
-  ],
-  method: ['GET,HEAD,PUT,PATCH,POST,DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 200,
-};
-app.options('*', cors());
-app.use(cors(allowedCors));
+app.use(cors());
 
 // Логин
 app.post('/signin', celebrate({
