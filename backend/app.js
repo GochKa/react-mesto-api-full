@@ -26,9 +26,8 @@ app.use(requestLogger);
 const allowedCors = [
   'http://mestogram.gocha.nomoreparties.sbs',
   'https://mestogram.gocha.nomoreparties.sbs',
-  'https://api.mestogram.gocha.nomoreparties.sbs',
-  'http://localhost:3000',
-  'https://localhost:3000',
+  'http://localhost:3005',
+  'https://localhost:3005',
 ];
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
