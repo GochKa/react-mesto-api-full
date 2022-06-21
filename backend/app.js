@@ -26,6 +26,7 @@ app.use(requestLogger);
 const allowedCors = [
   'http://mestogram.gocha.nomoreparties.sbs',
   'https://mestogram.gocha.nomoreparties.sbs',
+  'https://api.mestogram.gocha.nomoreparties.sbs',
   'http://localhost:3000',
   'https://localhost:3000',
 ];
