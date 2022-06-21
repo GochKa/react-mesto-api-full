@@ -11,12 +11,11 @@ const auth = require('./middlewares/auth');
 const NotFoundError = require('./errors/not-found');
 const regEx = require('./utils/reg');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const corsConfig = require('./middlewares/corsConfig');
 // Пожкдючение к базе данных
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 // Порт и подулючение приложения к express
-const { PORT = 3000 } = process.env;
+const { PORT = 3005 } = process.env;
 const app = express();
 
 app.use(bodyParser.json());
@@ -24,7 +23,31 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 // CORS
-app.use(corsConfig);
+const allowedCors = [
+  'http://mestogram.gocha.nomoreparties.sbs',
+  'https://mestogram.gocha.nomoreparties.sbs',
+  'http://localhost:3000',
+  'https://localhost:3000',
+];
+// eslint-disable-next-line consistent-return
+module.exports = (req, res, next) => {
+  const { origin } = req.headers;
+
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  const { method } = req;
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+  const requestHeaders = req.headers['access-control-request-headers'];
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+    return res.end();
+  }
+  next();
+};
+
+app.use(allowedCors);
 
 // Логин
 app.post('/signin', celebrate({
