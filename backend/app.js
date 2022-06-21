@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors, celebrate, Joi } = require('celebrate');
-
+const cors = require('cors');
 // Импорт необходимых модулей
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -22,6 +22,32 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+// CORS
+const allowedCors = [
+  'http://mestogram.gocha.nomoreparties.sbs',
+  'https://mestogram.gocha.nomoreparties.sbs',
+  'http://localhost:3005',
+  'https://localhost:3005',
+];
+// eslint-disable-next-line consistent-return
+module.exports = (req, res, next) => {
+  const { origin } = req.headers;
+
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  const { method } = req;
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+  const requestHeaders = req.headers['access-control-request-headers'];
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+    return res.end();
+  }
+  next();
+};
+
+app.use(cors(allowedCors));
 
 // Логин
 app.post('/signin', celebrate({
