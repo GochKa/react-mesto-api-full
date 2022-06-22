@@ -27,8 +27,12 @@ const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
-  return bcrypt.hash(password, 10)
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        return next(new ConflictError('Данный емеил уже занят'));
+      } return bcrypt.hash(password, 10);
+    })
     .then((hash) => User.create({
       name,
       about,
@@ -36,14 +40,16 @@ const createUser = (req, res, next) => {
       email,
       password: hash,
     }))
-    .then((user) => res.send({
+    .then((user) => res.status(200).send({
       data: {
         name: user.name,
         about: user.about,
         avatar: user.avatar,
         email: user.email,
+        _id: user._id,
       },
     }))
+    // eslint-disable-next-line consistent-return
     .catch((err) => {
       if (err.code === 11000) {
         return next(new ConflictError('Данный емеил уже занят'));
@@ -52,7 +58,7 @@ const createUser = (req, res, next) => {
         return next(new BadRequestError('Некорректные данные name или link или avatar'));
       }
 
-      return next(err);
+      next(err);
     });
 };
 

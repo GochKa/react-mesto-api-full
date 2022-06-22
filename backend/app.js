@@ -24,15 +24,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.use(cors());
-
-// Логин
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
-
 // Регистрациииия
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -44,12 +35,20 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+// Логин
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+
 // Подключение авторизации
 app.use(auth);
 
 // Основные страницы, защищенные авторизацией
-app.use('/', auth, require('./routes/users'));
-app.use('/', auth, require('./routes/cards'));
+app.use('/', require('./routes/users'));
+app.use('/', require('./routes/cards'));
 
 // Переход по несуществующему пути
 app.use('*', auth, (_, __, next) => next(new NotFoundError('Запрашиваемая страница не найдена')));
