@@ -5,4 +5,4 @@
 
 
 
-Ссылка на сайт: https://mestogram.gocha.nomoreparties.sbs
+Ссылка на сайт: https://mestogram.gocha.nomoreparties.sbs/sign-in
