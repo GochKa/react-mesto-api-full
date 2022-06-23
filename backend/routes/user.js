@@ -8,23 +8,23 @@ const {
   getCurrentUser,
 } = require('../controllers/user');
 
-router.get('/me', getCurrentUser); // возвращает информацию о текущем пользователе
-router.get('/', getUsers); // возвращает всех пользователей
+router.get('/me', getCurrentUser);
+router.get('/', getUsers);
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().hex().length(24),
   }),
-}), getUser); // возвращает пользователя по _id
+}), getUser);
 router.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
   }),
-}), updateUser); // обновляет профиль
+}), updateUser);
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().required().pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w.-]+)+[\w\-._~:/?#[\]@!$&'()*+,;=.]+$/),
   }),
-}), updateAvatar); // обновляет аватар
+}), updateAvatar);
 
 module.exports = router;

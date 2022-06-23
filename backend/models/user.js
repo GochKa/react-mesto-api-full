@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
       validator(link) {
         return validator.isURL(link);
       },
-      message: 'Неккоректный url адрес',
+      message: 'Неккоректная ссылка',
     },
   },
   email: {
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
       validator(email) {
         return validator.isEmail(email);
       },
-      message: 'Некорректый адрес электронной почты',
+      message: 'Некорректый email',
     },
   },
   password: {
@@ -43,16 +43,17 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 });
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new AuthError('некорректный email или пароль'));
+        return Promise.reject(new AuthError('Некорректный email или пароль'));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new AuthError('некорректный email или пароль'));
+            return Promise.reject(new AuthError('Некорректный email или пароль'));
           }
           return user;
         });

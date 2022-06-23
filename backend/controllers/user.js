@@ -1,13 +1,15 @@
+// Импорт необходимых пакетов
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+// Импорт ошибок
 const { JWT_SECRET, NODE_ENV } = process.env;
 const InvalidRequest = require('../errors/InvalidRequest');
-// const AuthError = require('../errors/AuthError');
 const NotFound = require('../errors/NotFound');
 const Conflict = require('../errors/Conflict');
-// создаёт пользователя
+
+// Создание нового пользователя
 const createUser = (req, res, next) => {
   const {
     name,
@@ -35,33 +37,28 @@ const createUser = (req, res, next) => {
       }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new InvalidRequest('не передан email или пароль'));
-        return;
+        throw new InvalidRequest('не передан email или пароль');
       }
       if (err.code === 11000) {
-        next(new Conflict('такой email уже занят'));
-        return;
+        throw new Conflict('такой email уже занят');
       }
       next(err);
     });
 };
 
-// логин
+// Логин
 const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, `${NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret'}`, { expiresIn: '7d' });
-      // if (!email || !password) {
-      //     next(new AuthError('некорректный email или пароль'));
-      // }).
       res.send({ token });
     })
     .catch((err) => {
       next(err);
     });
 };
-// возвращает информацию о текущем пользователе
+// Информация о выбраном пользователе
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
@@ -71,7 +68,7 @@ const getCurrentUser = (req, res, next) => {
       next(err);
     });
 };
-// возвращает всех пользователей
+// Нобор всех зарегестрированных пользователей
 const getUsers = (_, res, next) => {
   User.find({})
     .then((user) => {
@@ -82,27 +79,25 @@ const getUsers = (_, res, next) => {
     });
 };
 
-// возвращает пользователя по _id
+// Информация пользователя с указанным _id
 const getUser = (req, res, next) => {
   const id = req.params.userId;
   User.findById(id)
     .then((user) => {
       if (!user) {
-        next(new NotFound('пользователь не найден'));
-        return;
+        throw new NotFound('пользователь не найден');
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        next(new InvalidRequest('некорректный id при создании пользователя'));
-        return;
+        throw new InvalidRequest('некорректный id при создании пользователя');
       }
       next(err);
     });
 };
 
-// обновляет профиль
+// Обновление информации о пользователе
 const updateUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, {
@@ -112,21 +107,19 @@ const updateUser = (req, res, next) => {
   })
     .then((user) => {
       if (!user) {
-        next(new NotFound('пользователь не найден'));
-        return;
+        throw new NotFound('пользователь не найден');
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new InvalidRequest('переданы некорректные данные при создании пользователя'));
-        return;
+        throw new InvalidRequest('переданы некорректные данные при создании пользователя');
       }
       next(err);
     });
 };
 
-// обновляет аватар
+// Обновление автара пользователя
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, {
@@ -136,20 +129,19 @@ const updateAvatar = (req, res, next) => {
   })
     .then((user) => {
       if (!user) {
-        next(new NotFound('пользователь по указанному id не найден'));
-        return;
+        throw new NotFound('пользователь по указанному id не найден');
       }
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new InvalidRequest('переданы некорректные данные при обновлении аватара'));
-        return;
+        throw new InvalidRequest('переданы некорректные данные при обновлении аватара');
       }
       next(err);
     });
 };
 
+// Экспорт модулей
 module.exports = {
   getUsers,
   getUser,
