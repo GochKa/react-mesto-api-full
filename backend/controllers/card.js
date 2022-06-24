@@ -9,8 +9,8 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const getCards = (__, res, next) => {
   Card.find({})
     .populate('owner')
-    .then(({ card }) => {
-      res.send({ card });
+    .then((cards) => {
+      res.send({ data: cards });
     })
     .catch((err) => {
       next(err);
@@ -21,8 +21,8 @@ const getCards = (__, res, next) => {
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then(({ card }) => {
-      res.status(200).send({ card });
+    .then((card) => {
+      res.status(200).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
