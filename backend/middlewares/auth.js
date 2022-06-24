@@ -1,26 +1,28 @@
 const jwt = require('jsonwebtoken');
-const AuthError = require('../errors/AuthError');
+const AuthorizationError = require('../errors/AuthorizationError');
+require('dotenv').config();
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { JWT_SECRET_KEY = 'test' } = process.env;
 
-module.exports = (req, _, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new AuthError('необходима авторизация'));
+module.exports = (req, res, next) => {
+  const tmpAuthorization = req.headers.authorization;
+  // if (req.headers.authorization !== undefined && req.headers.authorization != null) {
+  // const tmpAuthorization = req.headers.authorization;
+  const jwtAuthorization = tmpAuthorization.split(' ')[1];
+  const cookieAuthorization = req.cookies.jwt;
+  console.log('cookieAuthorization =');
+  console.log(req);
+  if (!cookieAuthorization && !jwtAuthorization) {
+    return next(new AuthorizationError('Ошибка авторизации'));
   }
-
-  const token = authorization.replace('Bearer ', '');
-
   let payload;
   try {
-    payload = jwt.verify(token, `${NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret'}`);
+    // if (jwtAuthorization != null) payload = jwt.verify(jwtAuthorization, JWT_SECRET_KEY);
+    if (cookieAuthorization != null) payload = jwt.verify(cookieAuthorization, JWT_SECRET_KEY);
+    console.log(jwt.verify);
   } catch (err) {
-    next(new AuthError('необходима авторизация'));
+    return next(new AuthorizationError('Необходима авторизация'));
   }
-
   req.user = payload;
-
-  next();
-  return true;
+  return next();
 };
