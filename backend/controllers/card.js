@@ -9,8 +9,8 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const getCards = (__, res, next) => {
   Card.find({})
     .populate('owner')
-    .then((card) => {
-      res.send(card);
+    .then(({ card }) => {
+      res.send({ card });
     })
     .catch((err) => {
       next(err);
@@ -21,14 +21,14 @@ const getCards = (__, res, next) => {
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => {
-      res.status(200).send(card);
+    .then(({ card }) => {
+      res.status(200).send({ card });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new InvalidRequest('переданы некорректные данные при создании карточки');
+        return next(new InvalidRequest('переданы некорректные данные при создании карточки'));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -46,9 +46,9 @@ const deleteCard = (req, res, next) => {
           })
           .catch((err) => {
             if (err.name === 'CastError') {
-              throw new InvalidRequest('некорректный id');
+              return next(new InvalidRequest('некорректный id'));
             }
-            next(err);
+            return next(err);
           });
         return;
       }
@@ -72,9 +72,9 @@ const addLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new InvalidRequest('некорректный id');
+        return next(new InvalidRequest('некорректный id'));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -93,9 +93,9 @@ const removeLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new InvalidRequest('некорректный id');
+        return next(new InvalidRequest('некорректный id'));
       }
-      next(err);
+      return next(err);
     });
 };
 
