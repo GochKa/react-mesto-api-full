@@ -1,68 +1,66 @@
-require('dotenv').config();
+// Импорт необходимых пакетов
 const express = require('express');
 const mongoose = require('mongoose');
-// const cookieParser = require('cookie-parser');
-const { celebrate, Joi, errors } = require('celebrate');
-const cors = require('cors');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { createUser, login } = require('./controllers/user');
+const bodyParser = require('body-parser');
+const { errors, celebrate, Joi } = require('celebrate');
+
+// Импорт необходимых модулей
+const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const NotFound = require('./errors/NotFound');
+const NotFoundError = require('./errors/not-found');
+const regEx = require('./utils/reg');
 
-const { PORT = 3000 } = process.env;
-
-const app = express();
-
+// Пожкдючение к базе данных
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use(express.json());
-// app.use(cookieParser());
-app.use(requestLogger);
-app.use(cors());
+// Порт и подулючение приложения к express
+const { PORT = 3000 } = process.env;
+const app = express();
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-    avatar: Joi.string().custom((value, helpers) => {
-      if (/^https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?$/.test(value)) {
-        return value;
-      }
-      return helpers.message('Некорректная ссылка');
-    }),
-  }),
-}), createUser);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Логин
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
 }), login);
+
+// Регистрация
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(regEx),
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), createUser);
+
+// Подключение авторизации
 app.use(auth);
-app.use('/users', require('./routes/user'));
-app.use('/cards', require('./routes/card'));
 
-app.use('*', auth, (req, res, next) => {
-  next(new NotFound('Страница с таким url не найдена.'));
-});
+// Основные страницы, защищенные авторизацией
+app.use('/', auth, require('./routes/users'));
+app.use('/', auth, require('./routes/cards'));
 
-app.use(errorLogger);
+// Переход по несуществующему пути
+app.use('*', auth, (_, __, next) => next(new NotFoundError('Запрашиваемая страница не найдена')));
+
 app.use(errors());
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-
+// Контроль несуществующей ошибки
 app.use((err, _, res, next) => {
-  if (err.statusCode) {
-    res.status(err.statusCode).send({ message: err.message });
-    return;
-  }
-  res.status(500).send({ message: 'Ошибка по умолчанию.' });
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
-app.listen(PORT);
+
+// Запуск сервера
+app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Приложение запущено на порту ${PORT}`);
+});
