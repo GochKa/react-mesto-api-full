@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 const mongoose = require('mongoose');
 // const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
@@ -18,7 +18,22 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(express.json());
 // app.use(cookieParser());
 app.use(requestLogger);
-app.use(cors());
+
+const allowedCors = [
+  'https://mestogram.gocha.nomoreparties.sbs',
+  'http://mestogram.gocha.nomoreparties.sbs',
+  'localhost:3000',
+];
+
+app.use((req, res, next) => {
+  const { origin } = req.headers;
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+  next();
+});
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
