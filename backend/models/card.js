@@ -1,32 +1,35 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+const isURL = require('validator/lib/isURL');
 
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: true,
     minlength: 2,
     maxlength: 30,
-    required: true,
   },
+
   link: {
     type: String,
     required: true,
     validate: {
-      validator(link) {
-        return validator.isURL(link);
-      },
+      validator: (v) => isURL(v),
       message: 'Неккоректная ссылка',
     },
   },
+
   owner: {
-    required: true,
     type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: 'user',
   },
-  likes: {
-    type: [mongoose.Schema.Types.ObjectId],
+
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
     default: [],
-  },
+    ref: 'user',
+  }],
+
   createdAt: {
     type: Date,
     default: Date.now,
