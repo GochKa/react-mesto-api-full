@@ -18,33 +18,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(express.json());
 // app.use(cookieParser());
 app.use(requestLogger);
-const allowedCors = [
-  'http://localhost:3006',
-  'https://localhost:3006',
-  'http://localhost:3000',
-  'https://localhost:3000',
-  'https://mestogram.gocha.nomoreparties.sbs',
-  'http://mestogram.gocha.nomoreparties.sbs',
-];
-
-app.use((req, res, next) => {
-  const { origin } = req.headers;
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Credentials', true);
-  }
-
-  const { method } = req;
-  const requestHeaders = req.headers['access-control-request-headers'];
-  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-    res.header('Access-Control-Allow-Headers', requestHeaders);
-    return res.end();
-  }
-  return next();
-});
 
 app.post('/sign-in', celebrate({
   body: Joi.object().keys({
