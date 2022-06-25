@@ -10,6 +10,7 @@ const NotFound = require('../errors/NotFound');
 const Conflict = require('../errors/Conflict');
 
 // Создание нового пользователя
+
 const createUser = (req, res, next) => {
   const {
     name,
