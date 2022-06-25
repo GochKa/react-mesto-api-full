@@ -7,10 +7,9 @@ const User = require('../models/user');
 const { JWT_SECRET, NODE_ENV } = process.env;
 const InvalidRequest = require('../errors/InvalidRequest');
 const NotFound = require('../errors/NotFound');
-const Conflict = require('../errors/Conflict');
+const Conflict = require('../errors/conflict');
 
 // Создание нового пользователя
-
 const createUser = (req, res, next) => {
   const {
     name,
