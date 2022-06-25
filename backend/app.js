@@ -12,14 +12,15 @@ const NotFound = require('./errors/NotFound');
 const { PORT = 3000 } = process.env;
 
 const app = express();
-app.use(cors());
+
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
 app.use(express.json());
 // app.use(cookieParser());
 app.use(requestLogger);
+app.use(cors());
 
-app.post('/sign-up', celebrate({
+app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
@@ -33,7 +34,7 @@ app.post('/sign-up', celebrate({
     }),
   }),
 }), createUser);
-app.post('/sign-in', celebrate({
+app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
