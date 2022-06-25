@@ -34,8 +34,8 @@ const allowedCors = [
   'localhost:3001',
   'http://localhost:3001',
   'https://localhost:3001',
-  'https://domainname.axineymis.nomoredomains.xyz',
-  'http://domainname.axineymis.nomoredomains.xyz',
+  'https://mestogram.gocha.nomoreparties.sbs',
+  'http://mestogram.gocha.nomoreparties.sbs',
 ];
 
 app.use((req, res, next) => {
