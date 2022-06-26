@@ -1,0 +1,9 @@
+.popup__text_info {
+    height: 58px;
+    text-align: center;
+    margin: 32px 36px 60px;
+    width: 358px;
+    font-weight: 900;
+    font-size: 24px;
+    line-height: 29px;
+}
