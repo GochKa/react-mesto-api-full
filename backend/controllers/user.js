@@ -37,10 +37,10 @@ const createUser = (req, res, next) => {
       }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new InvalidRequest('не передан email или пароль');
+        next(new InvalidRequest('не передан email или пароль'));
       }
       if (err.code === 11000) {
-        throw new Conflict('такой email уже занят');
+        next(new Conflict('такой email уже занят'));
       }
       next(err);
     });
@@ -91,7 +91,7 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        throw new InvalidRequest('некорректный id при создании пользователя');
+        next(new InvalidRequest('некорректный id при создании пользователя'));
       }
       next(err);
     });
@@ -113,7 +113,7 @@ const updateUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new InvalidRequest('переданы некорректные данные при создании пользователя');
+        next(new InvalidRequest('переданы некорректные данные при создании пользователя'));
       }
       next(err);
     });
@@ -135,7 +135,7 @@ const updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new InvalidRequest('переданы некорректные данные при обновлении аватара');
+        next(new InvalidRequest('переданы некорректные данные при обновлении аватара'));
       }
       next(err);
     });

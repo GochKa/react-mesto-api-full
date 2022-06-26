@@ -26,7 +26,7 @@ const createCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new InvalidRequest('переданы некорректные данные при создании карточки');
+        next(new InvalidRequest('переданы некорректные данные при создании карточки'));
       }
       next(err);
     });
@@ -46,7 +46,7 @@ const deleteCard = (req, res, next) => {
           })
           .catch((err) => {
             if (err.name === 'CastError') {
-              throw new InvalidRequest('некорректный id');
+              next(new InvalidRequest('некорректный id'));
             }
             next(err);
           });
@@ -72,7 +72,7 @@ const addLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new InvalidRequest('некорректный id');
+        next(new InvalidRequest('некорректный id'));
       }
       next(err);
     });
@@ -93,7 +93,7 @@ const removeLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new InvalidRequest('некорректный id');
+        next(new InvalidRequest('некорректный id'));
       }
       next(err);
     });
