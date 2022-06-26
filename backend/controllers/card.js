@@ -68,7 +68,7 @@ const addLike = (req, res, next) => {
       if (!card) {
         throw new NotFound('передан несуществующий id карточки');
       }
-      res.send(card);
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -89,7 +89,7 @@ const removeLike = (req, res, next) => {
       if (!card) {
         throw new NotFound('передан несуществующий id карточки');
       }
-      res.send(card);
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
