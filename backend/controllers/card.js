@@ -10,7 +10,7 @@ const getCards = (__, res, next) => {
   Card.find({})
     .populate('owner')
     .then((card) => {
-      res.send(card);
+      res.send({ data: card });
     })
     .catch((err) => {
       next(err);
