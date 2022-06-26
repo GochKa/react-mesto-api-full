@@ -3,6 +3,6 @@
   
 Пожалуйста, прикрепите в это описание ссылку на сайт, размещенный на Яндекс.Облаке.
 
-Ссылка на сайт: https://mestogram.gocha.nomoreparties.sbs
-Ссылка на backend сайта: https://api.mestogram.gocha.nomoreparties.sbs
+Ссылка на сайт: https://mestogram.gocha.nomoreparties.sbs  
+Ссылка на backend сайта: https://api.mestogram.gocha.nomoreparties.sbs  
 Публичный IP-адрес сервера: 51.250.3.176
